@@ -1,0 +1,39 @@
+{
+  "name": "nodecv",
+  "version": "0.1.0",
+  "description": "Node.js interface to OpenCV",
+  "keywords": [
+    "nodecv",
+    "opencv"
+  ],
+  "bin": {
+    "nodecv": "./bin/nodecv"
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/xudafeng/nodecv.git"
+  },
+  "dependencies": {
+    "bindings": "^1.2.1",
+    "buffers": "^0.1.1",
+    "nan": "^2.6.1"
+  },
+  "devDependencies": {
+    "co-mocha": "*",
+    "mocha": "*",
+    "should": "*",
+    "jshint": "*",
+    "istanbul": "*",
+    "pre-commit": "1.1.1"
+  },
+  "scripts": {
+    "build": "node-gyp build",
+    "test": "make test",
+    "install": "node-gyp install --fallback-to-build"
+  },
+  "pre-commit": [
+    "jshint"
+  ],
+  "license": "MIT"
+}
