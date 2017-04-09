@@ -14,7 +14,7 @@
 [node-image]: https://img.shields.io/badge/node.js-%3E=_0.10-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
 
-> Node.js interface to [OpenCV](//github.com/opencv/opencv)
+> Node.js binding to [OpenCV](//github.com/opencv/opencv)
 
 ## Installment
 

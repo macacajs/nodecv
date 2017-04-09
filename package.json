@@ -1,7 +1,7 @@
 {
   "name": "nodecv",
   "version": "0.1.1",
-  "description": "Node.js interface to OpenCV",
+  "description": "Node.js binding to OpenCV",
   "keywords": [
     "nodecv",
     "opencv"
