@@ -1,8 +1,6 @@
 #ifndef NODECV_CORE_MAT_H
 #define NODECV_CORE_MAT_H
 
-FOO_BAR_BAZ_H_
-
 #include <opencv/cv.h>
 #include <node_object_wrap.h>
 #include <nan.h>
