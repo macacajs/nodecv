@@ -1,5 +1,5 @@
-#ifndef __IMGRPOC_H
-#define __IMGRPOC_H
+#ifndef NODECV_IMGRPOC_IMGRPOC_H
+#define NODECV_IMGRPOC_IMGRPOC_H
 
 #include <opencv/cv.h>
 #include <nan.h>

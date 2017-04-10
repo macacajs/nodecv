@@ -1,5 +1,5 @@
-#ifndef __HIGHGUI_H
-#define __HIGHGUI_H
+#ifndef NODECV_HIGHGUI_HIGHGUI_H
+#define NODECV_HIGHGUI_HIGHGUI_H
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
