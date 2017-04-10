@@ -1,6 +1,6 @@
 {
   "name": "nodecv",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Node.js binding to OpenCV",
   "keywords": [
     "nodecv",
@@ -29,8 +29,7 @@
   },
   "scripts": {
     "build": "node-gyp build",
-    "test": "make test",
-    "install": "node-gyp install --fallback-to-build"
+    "test": "make test"
   },
   "pre-commit": [
     "jshint"
