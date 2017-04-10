@@ -10,3 +10,4 @@ coverage
 test
 *.sw*
 *.un~
+output.jpg
