@@ -1,5 +1,5 @@
-#ifndef __FEATURES2D_H
-#define __FEATURES2D_H
+#ifndef NODECV_FEATURES2D_FEATURES2D_H
+#define NODECV_FEATURES2D_FEATURES2D_H
 
 #include <opencv/cv.h>
 #include <nan.h>

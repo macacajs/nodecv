@@ -1,5 +1,5 @@
-#ifndef __CASCADECLASSIFIER_H
-#define __CASCADECLASSIFIER_H
+#ifndef NODECV_OBJDETECT_CASCADECLASSIFIER_H
+#define NODECV_OBJDETECT_CASCADECLASSIFIER_H
 
 #include <opencv/cv.h>
 #include <nan.h>
