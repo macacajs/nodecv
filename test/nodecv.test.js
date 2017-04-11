@@ -64,7 +64,7 @@ describe('binding test', () => {
     nodecv.imread(imagePath, (err, im) => {
       if (err) {
         throw err;
-      };
+      }
 
       if (im.width() < 1 || im.height() < 1) {
         throw new Error('Image has no size');
@@ -72,7 +72,9 @@ describe('binding test', () => {
       var face_cascade = new nodecv.CascadeClassifier(haarcascade);
       var opts = {};
       face_cascade.detectMultiScale(im, (err, faces) => {
-        if (err) throw err;
+        if (err) {
+          throw err;
+        }
 
         for (var i = 0; i < faces.length; i++) {
           var face = faces[i];

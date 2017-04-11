@@ -1,6 +1,6 @@
 {
   "name": "nodecv",
-  "version": "0.1.10",
+  "version": "1.0.0",
   "description": "Node.js binding to OpenCV",
   "keywords": [
     "nodecv",

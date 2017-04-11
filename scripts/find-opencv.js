@@ -6,7 +6,7 @@ const flag = process.argv[2] || '--exists';
 
 const opencv_version = '2.4.13.2';
 
-exec(`pkg-config "opencv >= opencv_version" ${flag}`, (error, stdout, stderr) => {
+exec(`pkg-config "opencv >= ${opencv_version}" ${flag}`, (error, stdout) => {
   if (error) {
     throw new Error('ERROR: failed to run: pkg-config');
   }
