@@ -4,6 +4,7 @@ node_js:
 sudo: required
 services:
   - docker
-script: make ci
 install:
   - echo Hello NodeCV!
+script:
+  - make ci
