@@ -3,7 +3,7 @@ npm_bin= $$(npm bin)
 
 all: test
 install:
-	@npm install
+	@npm i
 test:
 	@node --harmony \
 		${npm_bin}/istanbul cover ${npm_bin}/_mocha \
@@ -21,4 +21,8 @@ travis: install
 		--bail
 jshint:
 	@${npm_bin}/jshint .
+build-docker:
+	@docker build . -t="nodecv"
+ci: build-docker
+	@docker run -it --entrypoint=bash --rm nodecv:latest -c cd /src && make travis
 .PHONY: test
