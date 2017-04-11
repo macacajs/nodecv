@@ -4,13 +4,15 @@ npm_bin= $$(npm bin)
 all: test
 install:
 	@npm i
-test:
+build:
+	@npm run build
+test: build
 	@node --harmony \
 		${npm_bin}/istanbul cover ${npm_bin}/_mocha \
 		-- \
 		--timeout 10000 \
 		--require co-mocha
-travis: install
+travis: install build
 	@NODE_ENV=test $(BIN) $(FLAGS) \
 		./node_modules/.bin/istanbul cover \
 		./node_modules/.bin/_mocha \
