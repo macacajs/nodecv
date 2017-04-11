@@ -5,3 +5,5 @@ sudo: required
 services:
   - docker
 script: make ci
+install:
+  - echo Hello NodeCV!
