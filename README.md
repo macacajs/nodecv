@@ -19,16 +19,47 @@
 $ npm i nodecv --save-dev
 ```
 
+## Usage
+
+Image IO:
+
+``` javascript
+nodecv.imread(imagePath, callback)
+nodecv.imread(buffer, callback)
+nodecv.imwrite(outputPath, mat);
+```
+
+Image Dissimilarity:
+
+``` javascript
+nodecv.imageDissimilarity(mat, mat, callback)
+```
+
+Mat properties:
+
+``` javascript
+im.width()
+im.height()
+im.size()
+im.ellipse(x, y, width, height)
+im.rectangle(x, y, width, height, color, thickness)
+```
+
+Cascade detect:
+
+``` javascript
+const haarcascade = 'path/to/haarcascade.xml';
+const cascade = new nodecv.CascadeClassifier(haarcascade);
+cascade.detectMultiScale(mat, callback)
+```
+
+NodeCV follow [Google's C++ style conventions](//google.github.io/styleguide/cppguide.html), and [opencv@2.4.13.2](http://docs.opencv.org/2.4.13.2/).
+
 ## Test
 
 ``` bash
 $ make test
 ```
-
-## Other
-
-- https://google.github.io/styleguide/cppguide.html
-- http://docs.opencv.org/2.4.13.2/
 
 ## License
 

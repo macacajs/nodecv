@@ -1,14 +1,12 @@
+.git
 coverage.html
 lib-cov/
 node_modules
 .travis.yml
-.drone.yml
-Makefile
 .jshintrc
 .jshintignore
 coverage
-test
 *.sw*
 *.un~
-output.jpg
 build
+output.jpg

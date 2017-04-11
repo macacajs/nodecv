@@ -22,7 +22,7 @@ travis: install
 jshint:
 	@${npm_bin}/jshint .
 build-docker:
-	@docker build . -t="nodecv"
+	docker build . -t="nodecv"
 ci: build-docker
-	@docker run -it --entrypoint=bash --rm nodecv:latest -c cd /src && make travis
+	docker run -it --entrypoint=bash --rm nodecv:latest -c "cd /src && make travis"
 .PHONY: test
