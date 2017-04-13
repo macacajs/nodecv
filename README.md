@@ -55,6 +55,12 @@ cascade.detectMultiScale(mat, callback)
 
 NodeCV follow [Google's C++ style conventions](//google.github.io/styleguide/cppguide.html), and [opencv@2.4.13.2](http://docs.opencv.org/2.4.13.2/).
 
+## Use As Service
+
+[Deploy with Docker](//github.com/macacajs/nodecv-server)
+
+![](http://wx3.sinaimg.cn/large/6d308bd9gy1fek6oa9i3vj21kw0zrn4y.jpg)
+
 ## Test
 
 ``` bash
