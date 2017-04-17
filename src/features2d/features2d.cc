@@ -20,8 +20,7 @@ class AsyncDetectSimilarity: public Nan::AsyncWorker {
     void Execute() {
 
       cv::Ptr<cv::FeatureDetector> detector = cv::FeatureDetector::create("ORB");
-      cv::Ptr<cv::DescriptorExtractor> extractor =
-        cv::DescriptorExtractor::create("ORB");
+      cv::Ptr<cv::DescriptorExtractor> extractor = cv::DescriptorExtractor::create("ORB");
       cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create("BruteForce-Hamming");
 
       std::vector<cv::DMatch> matches;
@@ -95,7 +94,6 @@ NAN_METHOD(features2d::imageDissimilarity) {
   cv::Mat image2 = Nan::ObjectWrap::Unwrap<Mat>(info[1]->ToObject())->mat;
 
   Nan::Callback *callback = new Nan::Callback(cb.As<Function>());
-
-  Nan::AsyncQueueWorker(new AsyncDetectSimilarity(callback, image1, image2) );
+  Nan::AsyncQueueWorker(new AsyncDetectSimilarity(callback, image1, image2));
   return;
 }
