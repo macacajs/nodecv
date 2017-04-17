@@ -45,13 +45,17 @@ describe('binding test', () => {
         if (err) {
           throw err;
         }
-        var match = nodecv.matchTemplate(image1, image2, 5);
-        image1.rectangle([match[1], match[2]], [match[3], match[4]], color, 1);
-        nodecv.imwrite(outputPath, image1);
-        match.length.should.be.equal(5);
-        console.log(match);
-        console.log(`output to: ${outputPath}`);
-        done();
+        nodecv.matchTemplate(image1, image2, 5, (err, match) => {
+          if (err) {
+            throw err;
+          }
+          image1.rectangle([match[1], match[2]], [match[3], match[4]], color, 1);
+          nodecv.imwrite(outputPath, image1);
+          match.length.should.be.equal(5);
+          console.log(match);
+          console.log(`output to: ${outputPath}`);
+          done();
+        });
       });
     });
   });

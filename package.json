@@ -21,11 +21,11 @@
   },
   "devDependencies": {
     "co-mocha": "*",
-    "mocha": "*",
-    "should": "*",
+    "istanbul": "^0.4.5",
     "jshint": "*",
-    "istanbul": "*",
-    "pre-commit": "1.1.1"
+    "mocha": "*",
+    "pre-commit": "1.1.1",
+    "should": "*"
   },
   "scripts": {
     "build": "node-gyp rebuild",
