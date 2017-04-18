@@ -262,7 +262,8 @@ NAN_METHOD(imgproc::findPairs) {
   
   Local<Function> cb = Local<Function>::Cast(info[2]);
   Local<Value> argv[2];
-  
+  v8::Local<v8::Object> obj = Nan::New<v8::Object>();
+
   if (image_mat->mat.size().width >= object_mat->mat.size().width && image_mat->mat.size().height >= object_mat->mat.size().height) {
     try {
       IplImage object_mat_temp = object_mat->mat;
@@ -318,21 +319,19 @@ NAN_METHOD(imgproc::findPairs) {
           CvPoint r2 = dst_corners[(i + 1) % 4];
           cvLine(correspond, cvPoint(r1.x, r1.y + object->height), cvPoint(r2.x, r2.y+object->height), colors[8]);
         }
-        
         v8::Local <v8::Array> arr = Nan::New<v8::Array>(6);
-        arr->Set(0, Nan::New<Number>(1));
         arr->Set(1, Nan::New<Number>(image->width));
         arr->Set(2, Nan::New<Number>(image->height));
         arr->Set(3, Nan::New<Number>(dst_corners[0].x));
         arr->Set(4, Nan::New<Number>(dst_corners[0].y));
         arr->Set(5, Nan::New<Number>(dst_corners[2].x));
         arr->Set(6, Nan::New<Number>(dst_corners[2].y));
-        argv[1] = arr;
+        obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(true));
+        obj->Set(Nan::New("match").ToLocalChecked(), arr);
       } else {
-        v8::Local <v8::Array> arr = Nan::New<v8::Array>(1);
-        arr->Set(0, Nan::New<Number>(0));
-        argv[1] = arr;
+        obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(false));
       }
+      argv[1] = obj;
       
     } catch (cv::Exception& e) {
       argv[0] = Nan::Error(e.what());
