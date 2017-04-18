@@ -27,7 +27,6 @@ NAN_METHOD(highgui::imread) {
     } else if (Buffer::HasInstance(info[0])) {
       uint8_t *buf = (uint8_t *) Buffer::Data(info[0]->ToObject());
       size_t len = Buffer::Length(info[0]->ToObject());
-
       cv::Mat *mbuf = new cv::Mat(len, 1, CV_64FC1, buf);
       mat = cv::imdecode(*mbuf, CV_LOAD_IMAGE_UNCHANGED);
 

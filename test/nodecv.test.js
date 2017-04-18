@@ -45,13 +45,17 @@ describe('binding test', () => {
         if (err) {
           throw err;
         }
-        var match = nodecv.matchTemplate(image1, image2, 5);
-        image1.rectangle([match[1], match[2]], [match[3], match[4]], color, 1);
-        nodecv.imwrite(outputPath, image1);
-        match.length.should.be.equal(5);
-        console.log(match);
-        console.log(`output to: ${outputPath}`);
-        done();
+        nodecv.matchTemplate(image1, image2, 5, (err, match) => {
+          if (err) {
+            throw err;
+          }
+          image1.rectangle([match[1], match[2]], [match[3], match[4]], color, 1);
+          nodecv.imwrite(outputPath, image1);
+          match.length.should.be.equal(5);
+          console.log(match);
+          console.log(`output to: ${outputPath}`);
+          done();
+        });
       });
     });
   });
@@ -86,4 +90,37 @@ describe('binding test', () => {
       }, opts.scale, opts.neighbors, opts.min && opts.min[0], opts.min && opts.min[1]);
     });
   });
+
+  it('findPairs should be ok', done => {
+    const image1Path = path.join(__dirname, 'fixture', 'T-Shirt-logo.jpg');
+    const image2Path = path.join(__dirname, 'fixture', 'T-Shirt.jpg');
+    nodecv.imread(image1Path, (err, image1) => {
+      if (err) {
+        throw err;
+      }
+      nodecv.imread(image2Path, (err, image2) => {
+        if (err) {
+          throw err;
+        }
+        nodecv.findPairs(image1, image2, (err, res) => {
+          if (err) {
+            throw err;
+          }
+          console.log(res)
+          done();
+        });
+      });
+    });
+  });
+
+
+  it('read file should be ok', done => {
+    const imagePath = path.join(__dirname, 'fixture', 'nofile.jpg');
+    nodecv.imread(imagePath, (err, im) => {
+      im.width().should.be.equal(0);
+      im.height().should.be.equal(0);
+      done();
+    });
+  });
+
 });
