@@ -3,6 +3,7 @@
 
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+#include <opencv2/nonfree/nonfree.hpp>
 #include <nan.h>
 #include <iostream>
 #include "../core/Mat.h"

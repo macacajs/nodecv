@@ -23,13 +23,12 @@ NAN_METHOD(highgui::imread) {
 
     if (info[0]->IsString()) {
       std::string filename = std::string(*Nan::Utf8String(info[0]->ToString()));
-      mat = cv::imread(filename, CV_LOAD_IMAGE_ANYCOLOR);
+      mat = cv::imread(filename, CV_LOAD_IMAGE_UNCHANGED);
     } else if (Buffer::HasInstance(info[0])) {
       uint8_t *buf = (uint8_t *) Buffer::Data(info[0]->ToObject());
       size_t len = Buffer::Length(info[0]->ToObject());
-
       cv::Mat *mbuf = new cv::Mat(len, 1, CV_64FC1, buf);
-      mat = cv::imdecode(*mbuf, CV_LOAD_IMAGE_ANYCOLOR);
+      mat = cv::imdecode(*mbuf, CV_LOAD_IMAGE_UNCHANGED);
 
       if (mat.empty()) {
         argv[0] = Nan::Error("Error loading file");

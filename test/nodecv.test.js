@@ -61,7 +61,6 @@ describe('binding test', () => {
   });
 
   it('detectMultiScale should be ok', done => {
-    return done();
     const color = [0, 0, 255];
     const imagePath = path.join(__dirname, 'fixture', 'T-Shirt.jpg');
     const outputPath = path.join(__dirname, '..', 'output.jpg');
@@ -91,4 +90,37 @@ describe('binding test', () => {
       }, opts.scale, opts.neighbors, opts.min && opts.min[0], opts.min && opts.min[1]);
     });
   });
+
+  it('findPairs should be ok', done => {
+    const image1Path = path.join(__dirname, 'fixture', 'T-Shirt-logo.jpg');
+    const image2Path = path.join(__dirname, 'fixture', 'T-Shirt.jpg');
+    nodecv.imread(image1Path, (err, image1) => {
+      if (err) {
+        throw err;
+      }
+      nodecv.imread(image2Path, (err, image2) => {
+        if (err) {
+          throw err;
+        }
+        nodecv.findPairs(image1, image2, (err, res) => {
+          if (err) {
+            throw err;
+          }
+          console.log(res)
+          done();
+        });
+      });
+    });
+  });
+
+
+  it('read file should be ok', done => {
+    const imagePath = path.join(__dirname, 'fixture', 'nofile.jpg');
+    nodecv.imread(imagePath, (err, im) => {
+      im.width().should.be.equal(0);
+      im.height().should.be.equal(0);
+      done();
+    });
+  });
+
 });

@@ -227,10 +227,10 @@ int imgproc::locatePlanarObject( const CvSeq* objectKeypoints, const CvSeq* obje
   {
     return 0;
   }
-
+  
   pt1.resize(n);
   pt2.resize(n);
-
+  
   for(i = 0; i < n; i++ ) {
     pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
     pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
@@ -238,7 +238,7 @@ int imgproc::locatePlanarObject( const CvSeq* objectKeypoints, const CvSeq* obje
   
   _pt1 = cvMat(1, n, CV_32FC2, &pt1[0] );
   _pt2 = cvMat(1, n, CV_32FC2, &pt2[0] );
-
+  
   if(!cvFindHomography( &_pt1, &_pt2, &_h, CV_RANSAC, 5))
     return 0;
   
@@ -256,79 +256,90 @@ int imgproc::locatePlanarObject( const CvSeq* objectKeypoints, const CvSeq* obje
 
 NAN_METHOD(imgproc::findPairs) {
   Nan::EscapableHandleScope scope;
-  
+  cv::initModule_nonfree();
   Mat *object_mat = Nan::ObjectWrap::Unwrap<Mat>(info[0]->ToObject());
   Mat *image_mat = Nan::ObjectWrap::Unwrap<Mat>(info[1]->ToObject());
   
-  IplImage object_mat_temp = object_mat->mat;
-  IplImage* object_src = &object_mat_temp;
-  IplImage image_mat_temp = image_mat->mat;
-  IplImage* image_src = &image_mat_temp;
-
   Local<Function> cb = Local<Function>::Cast(info[2]);
-  
   Local<Value> argv[2];
-  argv[0] = Nan::Null();
   
-  CvMemStorage* storage = cvCreateMemStorage(0);
-  
-  cvNamedWindow("Object", 1);
-  cvNamedWindow("Object Correspond", 1);
-  
-  static CvScalar colors[] = {
-    {{0,0,255}},
-    {{0,128,255}},
-    {{0,255,255}},
-    {{0,255,0}},
-    {{255,128,0}},
-    {{255,255,0}},
-    {{255,0,0}},
-    {{255,0,255}},
-    {{255,255,255}}
-  };
-  IplImage* object = cvCreateImage(cvGetSize(object_src), object_src->depth, 1);
-  cvCvtColor(object_src, object, CV_RGB2GRAY);
-  IplImage* image = cvCreateImage(cvGetSize(image_src), image_src->depth, 1);
-  cvCvtColor(image_src, image, CV_RGB2GRAY);
-  
-  CvSeq* objectKeypoints = 0, *objectDescriptors = 0;
-  CvSeq* imageKeypoints = 0, *imageDescriptors = 0;
-
-  CvSURFParams params = cvSURFParams(500, 1);
-  
-  double tt = (double)cvGetTickCount();
-  cvExtractSURF(object, 0, &objectKeypoints, &objectDescriptors, storage, params);
-  
-  cvExtractSURF(image, 0, &imageKeypoints, &imageDescriptors, storage, params);
-  
-  tt = (double)cvGetTickCount() - tt;
-  
-  CvPoint src_corners[4] = {{0,0}, {object->width,0}, {object->width, object->height}, {0, object->height}};
-  CvPoint dst_corners[4];
-  IplImage* correspond = cvCreateImage(cvSize(image->width, object->height + image->height), 8, 1);
-  cvSetImageROI(correspond, cvRect(0, 0, object->width, object->height));
-  cvCopy(object, correspond);
-  cvSetImageROI(correspond, cvRect(0, object->height, correspond->width, correspond->height));
-  cvCopy(image, correspond);
-  cvResetImageROI(correspond);
-  
-  if (locatePlanarObject(objectKeypoints, objectDescriptors, imageKeypoints,
-                         imageDescriptors, src_corners, dst_corners )) {
-    for (int i = 0; i < 4; i++) {
-      CvPoint r1 = dst_corners[i%4];
-      CvPoint r2 = dst_corners[(i+1)%4];
-      cvLine(correspond, cvPoint(r1.x, r1.y+object->height ),
-             cvPoint(r2.x, r2.y+object->height ), colors[8] );
+  if (image_mat->mat.size().width >= object_mat->mat.size().width && image_mat->mat.size().height >= object_mat->mat.size().height) {
+    try {
+      IplImage object_mat_temp = object_mat->mat;
+      IplImage* object_src = &object_mat_temp;
+      IplImage image_mat_temp = image_mat->mat;
+      IplImage* image_src = &image_mat_temp;
+      
+      argv[0] = Nan::Null();
+      
+      CvMemStorage* storage = cvCreateMemStorage(0);
+      
+      cvNamedWindow("Object", 1);
+      cvNamedWindow("Object Correspond", 1);
+      
+      static CvScalar colors[] = {
+        {{0,0,255}},
+        {{0,128,255}},
+        {{0,255,255}},
+        {{0,255,0}},
+        {{255,128,0}},
+        {{255,255,0}},
+        {{255,0,0}},
+        {{255,0,255}},
+        {{255,255,255}}
+      };
+      IplImage* object = cvCreateImage(cvGetSize(object_src), object_src->depth, 1);
+      cvCvtColor(object_src, object, CV_RGB2GRAY);
+      IplImage* image = cvCreateImage(cvGetSize(image_src), image_src->depth, 1);
+      cvCvtColor(image_src, image, CV_RGB2GRAY);
+      
+      CvSeq* objectKeypoints = 0, *objectDescriptors = 0;
+      CvSeq* imageKeypoints = 0, *imageDescriptors = 0;
+      
+      CvSURFParams params = cvSURFParams(500, 1);
+      
+      double tt = (double)cvGetTickCount();
+      cvExtractSURF(object, 0, &objectKeypoints, &objectDescriptors, storage, params);
+      
+      cvExtractSURF(image, 0, &imageKeypoints, &imageDescriptors, storage, params);
+      
+      tt = (double)cvGetTickCount() - tt;
+      
+      CvPoint src_corners[4] = {{0,0}, {object->width,0}, {object->width, object->height}, {0, object->height}};
+      CvPoint dst_corners[4];
+      IplImage* correspond = cvCreateImage(cvSize(image->width, object->height + image->height), 8, 1);
+      cvSetImageROI(correspond, cvRect(0, 0, object->width, object->height));
+      cvCopy(object, correspond);
+      cvSetImageROI(correspond, cvRect(0, object->height, correspond->width, correspond->height));
+      cvCopy(image, correspond);
+      cvResetImageROI(correspond);
+      
+      if (locatePlanarObject(objectKeypoints, objectDescriptors, imageKeypoints,
+                             imageDescriptors, src_corners, dst_corners )) {
+        for (int i = 0; i < 4; i++) {
+          CvPoint r1 = dst_corners[i % 4];
+          CvPoint r2 = dst_corners[(i + 1) % 4];
+          cvLine(correspond, cvPoint(r1.x, r1.y + object->height), cvPoint(r2.x, r2.y+object->height), colors[8]);
+        }
+        
+        v8::Local <v8::Array> arr = Nan::New<v8::Array>(6);
+        arr->Set(0, Nan::New<Number>(image->width));
+        arr->Set(1, Nan::New<Number>(image->height));
+        arr->Set(2, Nan::New<Number>(dst_corners[0].x));
+        arr->Set(3, Nan::New<Number>(dst_corners[0].y));
+        arr->Set(4, Nan::New<Number>(dst_corners[2].x));
+        arr->Set(5, Nan::New<Number>(dst_corners[2].y));
+        argv[1] = arr;
+      }
+      cvDestroyWindow("Object");
+      cvDestroyWindow("Object Correspond");
+    } catch (cv::Exception& e) {
+      argv[0] = Nan::Error(e.what());
+      argv[1] = Nan::Null();
     }
-
-    v8::Local <v8::Array> arr = Nan::New<v8::Array>(6);
-    arr->Set(0, Nan::New<Number>(image->width));
-    arr->Set(1, Nan::New<Number>(image->height));
-    arr->Set(2, Nan::New<Number>(dst_corners[0].x));
-    arr->Set(3, Nan::New<Number>(dst_corners[0].y));
-    arr->Set(4, Nan::New<Number>(dst_corners[2].x));
-    arr->Set(5, Nan::New<Number>(dst_corners[2].y));
-    argv[1] = arr;
+  } else {
+    argv[0] = Nan::Error("size error");
+    argv[1] = Nan::Null();
   }
   
   Nan::TryCatch try_catch;
