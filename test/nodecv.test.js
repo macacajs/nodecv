@@ -106,7 +106,7 @@ describe('binding test', () => {
           if (err) {
             throw err;
           }
-          console.log(res)
+          console.log(res);
           done();
         });
       });
