@@ -29,7 +29,8 @@
   },
   "scripts": {
     "build": "node-gyp rebuild",
-    "test": "make test"
+    "test": "make test",
+    "jshint": "make jshint"
   },
   "pre-commit": [
     "jshint"
