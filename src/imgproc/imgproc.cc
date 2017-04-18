@@ -274,9 +274,6 @@ NAN_METHOD(imgproc::findPairs) {
       
       CvMemStorage* storage = cvCreateMemStorage(0);
       
-      cvNamedWindow("Object", 1);
-      cvNamedWindow("Object Correspond", 1);
-      
       static CvScalar colors[] = {
         {{0,0,255}},
         {{0,128,255}},
@@ -331,8 +328,6 @@ NAN_METHOD(imgproc::findPairs) {
         arr->Set(5, Nan::New<Number>(dst_corners[2].y));
         argv[1] = arr;
       }
-      cvDestroyWindow("Object");
-      cvDestroyWindow("Object Correspond");
     } catch (cv::Exception& e) {
       argv[0] = Nan::Error(e.what());
       argv[1] = Nan::Null();
