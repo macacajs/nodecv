@@ -262,7 +262,7 @@ NAN_METHOD(imgproc::findPairs) {
   
   Local<Function> cb = Local<Function>::Cast(info[2]);
   Local<Value> argv[2];
-  
+
   if (image_mat->mat.size().width >= object_mat->mat.size().width && image_mat->mat.size().height >= object_mat->mat.size().height) {
     try {
       IplImage object_mat_temp = object_mat->mat;
@@ -320,14 +320,22 @@ NAN_METHOD(imgproc::findPairs) {
         }
         
         v8::Local <v8::Array> arr = Nan::New<v8::Array>(6);
-        arr->Set(0, Nan::New<Number>(image->width));
-        arr->Set(1, Nan::New<Number>(image->height));
-        arr->Set(2, Nan::New<Number>(dst_corners[0].x));
-        arr->Set(3, Nan::New<Number>(dst_corners[0].y));
-        arr->Set(4, Nan::New<Number>(dst_corners[2].x));
-        arr->Set(5, Nan::New<Number>(dst_corners[2].y));
+        arr->Set(0, Nan::New<Number>(1));
+        arr->Set(1, Nan::New<Number>(image->width));
+        arr->Set(2, Nan::New<Number>(image->height));
+        arr->Set(3, Nan::New<Number>(dst_corners[0].x));
+        arr->Set(4, Nan::New<Number>(dst_corners[0].y));
+        arr->Set(5, Nan::New<Number>(dst_corners[2].x));
+        arr->Set(6, Nan::New<Number>(dst_corners[2].y));
         argv[1] = arr;
       }
+    else
+    {
+        v8::Local <v8::Array> arr = Nan::New<v8::Array>(1);
+        arr->Set(0, Nan::New<Number>(0));
+        argv[1] = arr;
+    }
+
     } catch (cv::Exception& e) {
       argv[0] = Nan::Error(e.what());
       argv[1] = Nan::Null();
