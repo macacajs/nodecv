@@ -319,15 +319,13 @@ NAN_METHOD(imgproc::findPairs) {
           CvPoint r2 = dst_corners[(i + 1) % 4];
           cvLine(correspond, cvPoint(r1.x, r1.y + object->height), cvPoint(r2.x, r2.y+object->height), colors[8]);
         }
-        v8::Local <v8::Array> arr = Nan::New<v8::Array>(6);
-        arr->Set(1, Nan::New<Number>(image->width));
-        arr->Set(2, Nan::New<Number>(image->height));
-        arr->Set(3, Nan::New<Number>(dst_corners[0].x));
-        arr->Set(4, Nan::New<Number>(dst_corners[0].y));
-        arr->Set(5, Nan::New<Number>(dst_corners[2].x));
-        arr->Set(6, Nan::New<Number>(dst_corners[2].y));
         obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(true));
-        obj->Set(Nan::New("match").ToLocalChecked(), arr);
+        obj->Set(Nan::New("width").ToLocalChecked(), Nan::New<Number>(image->width));
+        obj->Set(Nan::New("height").ToLocalChecked(), Nan::New<Number>(image->height));
+        obj->Set(Nan::New("match_x1").ToLocalChecked(), Nan::New<Number>(dst_corners[0].x));
+        obj->Set(Nan::New("match_y1").ToLocalChecked(), Nan::New<Number>(dst_corners[0].y));
+        obj->Set(Nan::New("match_x2").ToLocalChecked(), Nan::New<Number>(dst_corners[2].x));
+        obj->Set(Nan::New("match_y2").ToLocalChecked(), Nan::New<Number>(dst_corners[2].y));
       } else {
         obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(false));
       }
