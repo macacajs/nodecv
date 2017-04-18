@@ -10,3 +10,4 @@ coverage
 *.un~
 build
 output.jpg
+node_modules
