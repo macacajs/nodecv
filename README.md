@@ -41,7 +41,7 @@ Image Dissimilarity:
 nodecv.imageDissimilarity(mat, mat, callback);
 ```
 
-Match Template:
+Match:
 
 ``` javascript
 nodecv.matchTemplate(mat, mat, method, callback);
