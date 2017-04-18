@@ -262,7 +262,7 @@ NAN_METHOD(imgproc::findPairs) {
   
   Local<Function> cb = Local<Function>::Cast(info[2]);
   Local<Value> argv[2];
-
+  
   if (image_mat->mat.size().width >= object_mat->mat.size().width && image_mat->mat.size().height >= object_mat->mat.size().height) {
     try {
       IplImage object_mat_temp = object_mat->mat;
@@ -328,14 +328,12 @@ NAN_METHOD(imgproc::findPairs) {
         arr->Set(5, Nan::New<Number>(dst_corners[2].x));
         arr->Set(6, Nan::New<Number>(dst_corners[2].y));
         argv[1] = arr;
-      }
-    else
-    {
+      } else {
         v8::Local <v8::Array> arr = Nan::New<v8::Array>(1);
         arr->Set(0, Nan::New<Number>(0));
         argv[1] = arr;
-    }
-
+      }
+      
     } catch (cv::Exception& e) {
       argv[0] = Nan::Error(e.what());
       argv[1] = Nan::Null();
