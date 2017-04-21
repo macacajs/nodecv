@@ -223,36 +223,31 @@ int imgproc::locatePlanarObject( const CvSeq* objectKeypoints, const CvSeq* obje
   //_findPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs );
   n1 = objectKeypoints->total;
   n2 = imageKeypoints->total;
-  n = n1<n2?n1/2:n2/2;
+  n = n1 < n2 ? n1 / 2 : n2 / 2;
 
-  if((int)(ptpairs.size())<n)
-  {
+  if((int)(ptpairs.size()) < n) {
     return 0;
   }
   
   pt1.resize(n);
   pt2.resize(n);
   
-  if(ptpairs.size()>n*2+1)
-  {
-    for(i = 0; i < n; i++ )
-    {
+  if (ptpairs.size() > n * 2 + 1) {
+    for (i = 0; i < n; i++) {
       pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
       pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
     }
-  }
-  else
-  {
+  } else {
     return 0;
   }
   
-  _pt1 = cvMat(1, n, CV_32FC2, &pt1[0] );
-  _pt2 = cvMat(1, n, CV_32FC2, &pt2[0] );
+  _pt1 = cvMat(1, n, CV_32FC2, &pt1[0]);
+  _pt2 = cvMat(1, n, CV_32FC2, &pt2[0]);
   
   if(!cvFindHomography( &_pt1, &_pt2, &_h, CV_RANSAC, 5))
     return 0;
   
-  for( i = 0; i < 4; i++ ) {
+  for(i = 0; i < 4; i++) {
     double x = src_corners[i].x, y = src_corners[i].y;
     double Z = 1./(h[6]*x + h[7]*y + h[8]);
     double X = (h[0]*x + h[1]*y + h[2])*Z;
