@@ -218,11 +218,13 @@ int imgproc::locatePlanarObject( const CvSeq* objectKeypoints, const CvSeq* obje
   vector<int> ptpairs;
   vector<CvPoint2D32f> pt1, pt2;
   CvMat _pt1, _pt2;
-  int i, n;
+  int i, n, n1, n2;
   flannFindPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs);
   //_findPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs );
-  
-  n = objectKeypoints->total/2;
+  n1 = objectKeypoints->total;
+  n2 = imageKeypoints->total;
+  n = n1<n2?n1/2:n2/2;
+
   if((int)(ptpairs.size())<n)
   {
     return 0;
@@ -231,9 +233,17 @@ int imgproc::locatePlanarObject( const CvSeq* objectKeypoints, const CvSeq* obje
   pt1.resize(n);
   pt2.resize(n);
   
-  for(i = 0; i < n; i++ ) {
-    pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
-    pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
+  if(ptpairs.size()>n*2+1)
+  {
+    for(i = 0; i < n; i++ )
+    {
+      pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
+      pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
+    }
+  }
+  else
+  {
+    return 0;
   }
   
   _pt1 = cvMat(1, n, CV_32FC2, &pt1[0] );
