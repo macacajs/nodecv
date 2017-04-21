@@ -68,7 +68,6 @@ NAN_METHOD(imgproc::matchTemplate) {
       arr->Set(3, Nan::New<Number>(roi_width));
       arr->Set(4, Nan::New<Number>(roi_height));
       argv[1] = arr;
-      
     } catch (cv::Exception& e) {
       argv[0] = Nan::Error(e.what());
       argv[1] = Nan::Null();
@@ -90,15 +89,14 @@ NAN_METHOD(imgproc::matchTemplate) {
 
 double imgproc::compareSURFDescriptors( const float* d1, const float* d2, double best, int length ) {
   double total_cost = 0;
-  assert( length % 4 == 0 );
-  for( int i = 0; i < length; i += 4 )
-  {
+  assert(length % 4 == 0);
+  for (int i = 0; i < length; i += 4 ) {
     double t0 = d1[i  ] - d2[i  ];
     double t1 = d1[i+1] - d2[i+1];
     double t2 = d1[i+2] - d2[i+2];
     double t3 = d1[i+3] - d2[i+3];
-    total_cost += t0*t0 + t1*t1 + t2*t2 + t3*t3;
-    if( total_cost > best )
+    total_cost += t0 * t0 + t1 * t1 + t2 * t2 + t3 * t3;
+    if(total_cost > best)
       break;
   }
   return total_cost;
@@ -227,7 +225,7 @@ int imgproc::locatePlanarObject( const CvSeq* objectKeypoints, const CvSeq* obje
   pt1.resize(n);
   pt2.resize(n);
   
-  if (ptpairs.size() > n * 2 + 1) {
+  if ((int)ptpairs.size() > n * 2 + 1) {
     for (i = 0; i < n; i++) {
       pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
       pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;

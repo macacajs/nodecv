@@ -16,9 +16,6 @@
         "<!@(node scripts/find-opencv.js --cflags)",
         "<!(node -e \"require('nan')\")"
       ],
-      "defines": [
-        "V8_DEPRECATION_WARNINGS=1"
-      ],
       "cflags!" : [
         "-fno-exceptions"
       ],
@@ -59,10 +56,9 @@
           "OS==\"mac\"",
           {
             "xcode_settings": {
+              "CLANG_CXX_LIBRARY": 'libc++',
               "OTHER_CFLAGS": [
                 "-mmacosx-version-min=10.7",
-                "-std=c++11",
-                "-stdlib=libc++",
                 "<!@(node scripts/find-opencv.js --cflags)",
               ],
               "GCC_ENABLE_CPP_RTTI": "YES",
