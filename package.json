@@ -1,6 +1,6 @@
 {
   "name": "nodecv",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Node.js binding to OpenCV",
   "keywords": [
     "nodecv",
@@ -35,5 +35,6 @@
   "pre-commit": [
     "jshint"
   ],
+  "homepage": "//github.com/xudafeng/nodecv",
   "license": "MIT"
 }
