@@ -56,7 +56,7 @@
           "OS==\"mac\"",
           {
             "xcode_settings": {
-              "CLANG_CXX_LIBRARY": 'libc++',
+              "CLANG_CXX_LIBRARY": "libc++",
               "OTHER_CFLAGS": [
                 "-mmacosx-version-min=10.7",
                 "<!@(node scripts/find-opencv.js --cflags)",
