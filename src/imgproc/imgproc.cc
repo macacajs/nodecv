@@ -115,25 +115,23 @@ int imgproc::naiveNearestNeighbor( const float* vec, int laplacian,
   cvStartReadSeq( model_keypoints, &kreader, 0 );
   cvStartReadSeq( model_descriptors, &reader, 0 );
   
-  for( i = 0; i < model_descriptors->total; i++ )
-  {
+  for( i = 0; i < model_descriptors->total; i++ ) {
     const CvSURFPoint* kp = (const CvSURFPoint*)kreader.ptr;
     const float* mvec = (const float*)reader.ptr;
     CV_NEXT_SEQ_ELEM( kreader.seq->elem_size, kreader );
     CV_NEXT_SEQ_ELEM( reader.seq->elem_size, reader );
-    if( laplacian != kp->laplacian )
+    if (laplacian != kp->laplacian)
       continue;
     d = compareSURFDescriptors( vec, mvec, dist2, length );
-    if( d < dist1 )
-    {
+    if (d < dist1) {
       dist2 = dist1;
       dist1 = d;
       neighbor = i;
-    }
-    else if ( d < dist2 )
+    } else if (d < dist2) {
       dist2 = d;
+    }
   }
-  if ( dist1 < 0.6*dist2 )
+  if (dist1 < 0.6*dist2)
     return neighbor;
   return -1;
 }
@@ -142,12 +140,11 @@ void imgproc::_findPairs( const CvSeq* objectKeypoints, const CvSeq* objectDescr
                          const CvSeq* imageKeypoints, const CvSeq* imageDescriptors, vector<int>& ptpairs ) {
   int i;
   CvSeqReader reader, kreader;
-  cvStartReadSeq( objectKeypoints, &kreader );
-  cvStartReadSeq( objectDescriptors, &reader );
+  cvStartReadSeq( objectKeypoints, &kreader);
+  cvStartReadSeq( objectDescriptors, &reader);
   ptpairs.clear();
   
-  for( i = 0; i < objectDescriptors->total; i++ )
-  {
+  for( i = 0; i < objectDescriptors->total; i++) {
     const CvSURFPoint* kp = (const CvSURFPoint*)kreader.ptr;
     const float* descriptor = (const float*)reader.ptr;
     CV_NEXT_SEQ_ELEM( kreader.seq->elem_size, kreader );
@@ -173,9 +170,8 @@ void imgproc::flannFindPairs( const CvSeq*, const CvSeq* objectDescriptors,
   // copy descriptors
   CvSeqReader obj_reader;
   float* obj_ptr = m_object.ptr<float>(0);
-  cvStartReadSeq( objectDescriptors, &obj_reader );
-  for(int i = 0; i < objectDescriptors->total; i++ )
-  {
+  cvStartReadSeq(objectDescriptors, &obj_reader);
+  for (int i = 0; i < objectDescriptors->total; i++) {
     const float* descriptor = (const float*)obj_reader.ptr;
     CV_NEXT_SEQ_ELEM( obj_reader.seq->elem_size, obj_reader );
     memcpy(obj_ptr, descriptor, length*sizeof(float));
@@ -184,8 +180,7 @@ void imgproc::flannFindPairs( const CvSeq*, const CvSeq* objectDescriptors,
   CvSeqReader img_reader;
   float* img_ptr = m_image.ptr<float>(0);
   cvStartReadSeq( imageDescriptors, &img_reader );
-  for(int i = 0; i < imageDescriptors->total; i++ )
-  {
+  for(int i = 0; i < imageDescriptors->total; i++) {
     const float* descriptor = (const float*)img_reader.ptr;
     CV_NEXT_SEQ_ELEM( img_reader.seq->elem_size, img_reader );
     memcpy(img_ptr, descriptor, length*sizeof(float));
@@ -218,31 +213,36 @@ int imgproc::locatePlanarObject( const CvSeq* objectKeypoints, const CvSeq* obje
   vector<int> ptpairs;
   vector<CvPoint2D32f> pt1, pt2;
   CvMat _pt1, _pt2;
-  int i, n;
+  int i, n, n1, n2;
   flannFindPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs);
   //_findPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs );
-  
-  n = objectKeypoints->total/2;
-  if((int)(ptpairs.size())<n)
-  {
+  n1 = objectKeypoints->total;
+  n2 = imageKeypoints->total;
+  n = n1 < n2 ? n1 / 2 : n2 / 2;
+
+  if ((int)(ptpairs.size()) < n) {
     return 0;
   }
   
   pt1.resize(n);
   pt2.resize(n);
   
-  for(i = 0; i < n; i++ ) {
-    pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
-    pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
+  if (ptpairs.size() > n * 2 + 1) {
+    for (i = 0; i < n; i++) {
+      pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
+      pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
+    }
+  } else {
+    return 0;
   }
   
-  _pt1 = cvMat(1, n, CV_32FC2, &pt1[0] );
-  _pt2 = cvMat(1, n, CV_32FC2, &pt2[0] );
+  _pt1 = cvMat(1, n, CV_32FC2, &pt1[0]);
+  _pt2 = cvMat(1, n, CV_32FC2, &pt2[0]);
   
-  if(!cvFindHomography( &_pt1, &_pt2, &_h, CV_RANSAC, 5))
+  if (!cvFindHomography( &_pt1, &_pt2, &_h, CV_RANSAC, 5))
     return 0;
   
-  for( i = 0; i < 4; i++ ) {
+  for (i = 0; i < 4; i++) {
     double x = src_corners[i].x, y = src_corners[i].y;
     double Z = 1./(h[6]*x + h[7]*y + h[8]);
     double X = (h[0]*x + h[1]*y + h[2])*Z;
