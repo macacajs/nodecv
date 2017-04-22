@@ -9,9 +9,7 @@ void CascadeClassifier::Init(Local<Object> target) {
   constructor.Reset(ctor);
   ctor->InstanceTemplate()->SetInternalFieldCount(1);
   ctor->SetClassName(Nan::New("CascadeClassifier").ToLocalChecked());
-
   Nan::SetPrototypeMethod(ctor, "detectMultiScale", DetectMultiScale);
-
   target->Set(Nan::New("CascadeClassifier").ToLocalChecked(), ctor->GetFunction());
 }
 
@@ -73,8 +71,8 @@ class AsyncDetectMultiScale: public Nan::AsyncWorker {
     void HandleOKCallback() {
       Nan::HandleScope scope;
 
-      Local < Value > argv[2];
-      v8::Local < v8::Array > arr = Nan::New < v8::Array > (this->res.size());
+      Local <Value> argv[2];
+      v8::Local <v8::Array> arr = Nan::New < v8::Array > (this->res.size());
 
       for (unsigned int i = 0; i < this->res.size(); i++) {
         v8::Local < v8::Object > x = Nan::New<v8::Object>();
