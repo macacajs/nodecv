@@ -1,6 +1,11 @@
 {
+  "variables": {
+    "module_name": "nodecv",
+    "module_path": "./build",
+    "opencv_version": "2.4.13.2"
+  },
   "targets": [{
-    "target_name": "nodecv",
+    "target_name": "<(module_name)",
       "sources": [
         "src/init.cc",
         "src/core/Mat.cc",
@@ -10,10 +15,10 @@
         "src/imgproc/imgproc.cc"
       ],
       "libraries": [
-        "<!@(node scripts/find-opencv.js --libs)"
+        "<!@(pkg-config \"opencv >= <(opencv_version)\" --libs)"
       ],
       "include_dirs": [
-        "<!@(node scripts/find-opencv.js --cflags)",
+        "<!@(pkg-config \"opencv >= <(opencv_version)\" --cflags)",
         "<!(node -e \"require('nan')\")"
       ],
       "cflags!" : [
@@ -28,7 +33,7 @@
           "OS==\"linux\" or OS==\"freebsd\" or OS==\"openbsd\" or OS==\"solaris\" or OS==\"aix\"",
           {
             "cflags": [
-              "<!@(node scripts/find-opencv.js --cflags)",
+              "<!@(pkg-config \"opencv >= <(opencv_version)\" --cflags)",
               "-Wall"
             ]
           }
@@ -59,7 +64,7 @@
               "CLANG_CXX_LIBRARY": "libc++",
               "OTHER_CFLAGS": [
                 "-mmacosx-version-min=10.7",
-                "<!@(node scripts/find-opencv.js --cflags)",
+                "<!@(pkg-config \"opencv >= <(opencv_version)\" --cflags)",
               ],
               "GCC_ENABLE_CPP_RTTI": "YES",
               "GCC_ENABLE_CPP_EXCEPTIONS": "YES"
@@ -101,14 +106,14 @@
       "target_name": "action_after_build",
       "type": "none",
       "dependencies": [
-        "nodecv"
+        "<(module_name)"
       ],
       "copies": [
         {
           "files": [
-            "<(PRODUCT_DIR)/nodecv.node"
+            "<(PRODUCT_DIR)/<(module_name).node"
           ],
-          "destination": "<!(node scripts/find-build-dir.js)"
+          "destination": "<(module_path)"
         }
       ]
     }
