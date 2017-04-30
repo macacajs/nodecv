@@ -10,10 +10,10 @@
         "src/imgproc/imgproc.cc"
       ],
       "libraries": [
-        "<!@(node scripts/find-opencv.js --libs)"
+        "<!@(pkg-config \"opencv >= 2.4.13.2\" --libs)"
       ],
       "include_dirs": [
-        "<!@(node scripts/find-opencv.js --cflags)",
+        "<!@(pkg-config \"opencv >= 2.4.13.2\" --cflags)",
         "<!(node -e \"require('nan')\")"
       ],
       "cflags!" : [
@@ -28,7 +28,7 @@
           "OS==\"linux\" or OS==\"freebsd\" or OS==\"openbsd\" or OS==\"solaris\" or OS==\"aix\"",
           {
             "cflags": [
-              "<!@(node scripts/find-opencv.js --cflags)",
+              "<!@(pkg-config \"opencv >= 2.4.13.2\" --cflags)",
               "-Wall"
             ]
           }
@@ -59,7 +59,7 @@
               "CLANG_CXX_LIBRARY": "libc++",
               "OTHER_CFLAGS": [
                 "-mmacosx-version-min=10.7",
-                "<!@(node scripts/find-opencv.js --cflags)",
+                "<!@(pkg-config \"opencv >= 2.4.13.2\" --cflags)",
               ],
               "GCC_ENABLE_CPP_RTTI": "YES",
               "GCC_ENABLE_CPP_EXCEPTIONS": "YES"
@@ -108,7 +108,7 @@
           "files": [
             "<(PRODUCT_DIR)/nodecv.node"
           ],
-          "destination": "<!(node scripts/find-build-dir.js)"
+          "destination": "<!(node -e \"console.log(require('path').join(process.cwd(), 'build'))\")"
         }
       ]
     }
