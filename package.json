@@ -1,6 +1,6 @@
 {
   "name": "nodecv",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Node.js binding to OpenCV",
   "keywords": [
     "nodecv",
@@ -12,7 +12,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/xudafeng/nodecv.git"
+    "url": "git://github.com/macacajs/nodecv.git"
   },
   "dependencies": {
     "bindings": "^1.2.1",
@@ -35,6 +35,6 @@
   "pre-commit": [
     "jshint"
   ],
-  "homepage": "//github.com/xudafeng/nodecv",
+  "homepage": "//github.com/macacajs/nodecv",
   "license": "MIT"
 }

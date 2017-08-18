@@ -8,10 +8,10 @@
 
 [npm-image]: https://img.shields.io/npm/v/nodecv.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/nodecv
-[travis-image]: https://img.shields.io/travis/xudafeng/nodecv.svg?style=flat-square
-[travis-url]: https://travis-ci.org/xudafeng/nodecv
-[coveralls-image]: https://img.shields.io/coveralls/xudafeng/nodecv.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/xudafeng/nodecv?branch=master
+[travis-image]: https://img.shields.io/travis/macacajs/nodecv.svg?style=flat-square
+[travis-url]: https://travis-ci.org/macacajs/nodecv
+[coveralls-image]: https://img.shields.io/coveralls/macacajs/nodecv.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/macacajs/nodecv?branch=master
 [node-image]: https://img.shields.io/badge/node.js-%3E=_6-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
 [download-image]: https://img.shields.io/npm/dm/nodecv.svg?style=flat-square
