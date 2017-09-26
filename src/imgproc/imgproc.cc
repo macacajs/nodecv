@@ -315,20 +315,9 @@ NAN_METHOD(imgproc::findPairs) {
       
       CvPoint src_corners[4] = {{0,0}, {object->width,0}, {object->width, object->height}, {0, object->height}};
       CvPoint dst_corners[4];
-      IplImage* correspond = cvCreateImage(cvSize(image->width, object->height + image->height), 8, 1);
-      cvSetImageROI(correspond, cvRect(0, 0, object->width, object->height));
-      cvCopy(object, correspond);
-      cvSetImageROI(correspond, cvRect(0, object->height, correspond->width, correspond->height));
-      cvCopy(image, correspond);
-      cvResetImageROI(correspond);
       
       if (locatePlanarObject(objectKeypoints, objectDescriptors, imageKeypoints,
                              imageDescriptors, src_corners, dst_corners )) {
-        for (int i = 0; i < 4; i++) {
-          CvPoint r1 = dst_corners[i % 4];
-          CvPoint r2 = dst_corners[(i + 1) % 4];
-          cvLine(correspond, cvPoint(r1.x, r1.y + object->height), cvPoint(r2.x, r2.y+object->height), colors[8]);
-        }
         obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(true));
         obj->Set(Nan::New("width").ToLocalChecked(), Nan::New<Number>(image->width));
         obj->Set(Nan::New("height").ToLocalChecked(), Nan::New<Number>(image->height));
