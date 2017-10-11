@@ -223,27 +223,29 @@ int imgproc::locatePlanarObject(
   vector<int> ptpairs;
   vector<CvPoint2D32f> pt1, pt2;
   CvMat _pt1, _pt2;
-  int i, n, n1, n2;
+  int i, n;
+  int kp1, kp2, kpthreshold;
   flannFindPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs);
   //_findPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs );
-  n1 = objectKeypoints->total;
-  n2 = imageKeypoints->total;
-  n = n1 < n2 ? n1 / 2 : n2 / 2;
 
-  if ((int)(ptpairs.size()) < n) {
-    return 0;
+  kp1 = objectKeypoints->total;
+  kp2 = imageKeypoints->total;
+  kpthreshold = kp1 < kp2 ? kp1 / 2 : kp2 / 2;
+  if ((int)(ptpairs.size()) < kpthreshold) {
+  return 0;
   }
-  
+
+  n = (int)(ptpairs.size()/2);
+
+  if( n < 4 )
+  return 0;
+
   pt1.resize(n);
   pt2.resize(n);
-  
-  if ((int)ptpairs.size() > n * 2 + 1) {
-    for (i = 0; i < n; i++) {
-      pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
-      pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
-    }
-  } else {
-    return 0;
+
+  for (i = 0; i < n; i++) {
+  pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
+  pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
   }
   
   _pt1 = cvMat(1, n, CV_32FC2, &pt1[0]);
@@ -274,74 +276,69 @@ NAN_METHOD(imgproc::findPairs) {
   Local<Value> argv[2];
   v8::Local<v8::Object> obj = Nan::New<v8::Object>();
 
-  if (image_mat->mat.size().width >= object_mat->mat.size().width && image_mat->mat.size().height >= object_mat->mat.size().height) {
-    try {
-      IplImage object_mat_temp = object_mat->mat;
-      IplImage* object_src = &object_mat_temp;
-      IplImage image_mat_temp = image_mat->mat;
-      IplImage* image_src = &image_mat_temp;
-      
-      argv[0] = Nan::Null();
-      
-      CvMemStorage* storage = cvCreateMemStorage(0);
-      
-      static CvScalar colors[] = {
-        {{0,0,255}},
-        {{0,128,255}},
-        {{0,255,255}},
-        {{0,255,0}},
-        {{255,128,0}},
-        {{255,255,0}},
-        {{255,0,0}},
-        {{255,0,255}},
-        {{255,255,255}}
-      };
-      IplImage* object = cvCreateImage(cvGetSize(object_src), object_src->depth, 1);
-      cvCvtColor(object_src, object, CV_RGB2GRAY);
-      IplImage* image = cvCreateImage(cvGetSize(image_src), image_src->depth, 1);
-      cvCvtColor(image_src, image, CV_RGB2GRAY);
-      
-      CvSeq* objectKeypoints = 0, *objectDescriptors = 0;
-      CvSeq* imageKeypoints = 0, *imageDescriptors = 0;
-      
-      CvSURFParams params = cvSURFParams(500, 1);
-      
-      double tt = (double)cvGetTickCount();
-      cvExtractSURF(object, 0, &objectKeypoints, &objectDescriptors, storage, params);
-      
-      cvExtractSURF(image, 0, &imageKeypoints, &imageDescriptors, storage, params);
-      
-      tt = (double)cvGetTickCount() - tt;
-      
-      CvPoint src_corners[4] = {{0,0}, {object->width,0}, {object->width, object->height}, {0, object->height}};
-      CvPoint dst_corners[4];
-      
-      if (locatePlanarObject(objectKeypoints, objectDescriptors, imageKeypoints,
-                             imageDescriptors, src_corners, dst_corners )) {
-        obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(true));
-        obj->Set(Nan::New("width").ToLocalChecked(), Nan::New<Number>(image->width));
-        obj->Set(Nan::New("height").ToLocalChecked(), Nan::New<Number>(image->height));
-        obj->Set(Nan::New("match_x1").ToLocalChecked(), Nan::New<Number>(dst_corners[0].x));
-        obj->Set(Nan::New("match_y1").ToLocalChecked(), Nan::New<Number>(dst_corners[0].y));
-        obj->Set(Nan::New("match_x2").ToLocalChecked(), Nan::New<Number>(dst_corners[2].x));
-        obj->Set(Nan::New("match_y2").ToLocalChecked(), Nan::New<Number>(dst_corners[2].y));
-      } else {
-        obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(false));
-      }
-      argv[1] = obj;
-      
-    } catch (cv::Exception& e) {
-      argv[0] = Nan::Error(e.what());
-      argv[1] = Nan::Null();
-    }
+try {
+  IplImage object_mat_temp = object_mat->mat;
+  IplImage* object_src = &object_mat_temp;
+  IplImage image_mat_temp = image_mat->mat;
+  IplImage* image_src = &image_mat_temp;
+
+  argv[0] = Nan::Null();
+
+  CvMemStorage* storage = cvCreateMemStorage(0);
+
+  static CvScalar colors[] = {
+    {{0,0,255}},
+    {{0,128,255}},
+    {{0,255,255}},
+    {{0,255,0}},
+    {{255,128,0}},
+    {{255,255,0}},
+    {{255,0,0}},
+    {{255,0,255}},
+    {{255,255,255}}
+  };
+  IplImage* object = cvCreateImage(cvGetSize(object_src), object_src->depth, 1);
+  cvCvtColor(object_src, object, CV_RGB2GRAY);
+  IplImage* image = cvCreateImage(cvGetSize(image_src), image_src->depth, 1);
+  cvCvtColor(image_src, image, CV_RGB2GRAY);
+
+  CvSeq* objectKeypoints = 0, *objectDescriptors = 0;
+  CvSeq* imageKeypoints = 0, *imageDescriptors = 0;
+
+  CvSURFParams params = cvSURFParams(500, 1);
+
+  double tt = (double)cvGetTickCount();
+  cvExtractSURF(object, 0, &objectKeypoints, &objectDescriptors, storage, params);
+
+  cvExtractSURF(image, 0, &imageKeypoints, &imageDescriptors, storage, params);
+
+  tt = (double)cvGetTickCount() - tt;
+
+  CvPoint src_corners[4] = {{0,0}, {object->width,0}, {object->width, object->height}, {0, object->height}};
+  CvPoint dst_corners[4];
+
+  if (locatePlanarObject(objectKeypoints, objectDescriptors, imageKeypoints,
+                         imageDescriptors, src_corners, dst_corners )) {
+    obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(true));
+    obj->Set(Nan::New("width").ToLocalChecked(), Nan::New<Number>(image->width));
+    obj->Set(Nan::New("height").ToLocalChecked(), Nan::New<Number>(image->height));
+    obj->Set(Nan::New("match_x1").ToLocalChecked(), Nan::New<Number>(dst_corners[0].x));
+    obj->Set(Nan::New("match_y1").ToLocalChecked(), Nan::New<Number>(dst_corners[0].y));
+    obj->Set(Nan::New("match_x2").ToLocalChecked(), Nan::New<Number>(dst_corners[2].x));
+    obj->Set(Nan::New("match_y2").ToLocalChecked(), Nan::New<Number>(dst_corners[2].y));
   } else {
-    argv[0] = Nan::Error("size error");
-    argv[1] = Nan::Null();
+    obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(false));
   }
-  
+  argv[1] = obj;
+
+} catch (cv::Exception& e) {
+  argv[0] = Nan::Error(e.what());
+  argv[1] = Nan::Null();
+}
+
   Nan::TryCatch try_catch;
   cb->Call(Nan::GetCurrentContext()->Global(), 2, argv);
-  
+
   if (try_catch.HasCaught()) {
     Nan::FatalException(try_catch);
   }
