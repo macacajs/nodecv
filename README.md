@@ -21,7 +21,7 @@
 
 ## Installment
 
-``` bash
+```bash
 $ npm i nodecv --save-dev
 ```
 
@@ -29,7 +29,7 @@ $ npm i nodecv --save-dev
 
 Image IO:
 
-``` javascript
+```javascript
 nodecv.imread(imagePath, callback);
 nodecv.imread(buffer, callback);
 nodecv.imwrite(outputPath, mat);
@@ -37,20 +37,20 @@ nodecv.imwrite(outputPath, mat);
 
 Image Dissimilarity:
 
-``` javascript
+```javascript
 nodecv.imageDissimilarity(mat, mat, callback);
 ```
 
 Match:
 
-``` javascript
+```javascript
 nodecv.matchTemplate(mat, mat, method, callback);
 nodecv.findPairs(mat, mat, callback);
 ```
 
 Mat properties:
 
-``` javascript
+```javascript
 im.width();
 im.height();
 im.size();
@@ -76,7 +76,7 @@ NodeCV follow [Google's C++ style conventions](//google.github.io/styleguide/cpp
 
 ## Test
 
-``` bash
+```bash
 $ make test
 ```
 
