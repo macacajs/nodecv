@@ -230,7 +230,7 @@ int imgproc::locatePlanarObject(
 
   kp1 = objectKeypoints->total;
   kp2 = imageKeypoints->total;
-  kpthreshold = kp1 < kp2 ? kp1 / 2 : kp2 / 2;
+  kpthreshold = kp1 < kp2 ? kp1 / 4 : kp2 / 4;
   if ((int)(ptpairs.size()) < kpthreshold) {
   return 0;
   }
