@@ -227,8 +227,8 @@ int imgproc::locatePlanarObject(
   CvMat _pt1, _pt2;
   int i, n;
   int kp1, kp2, kpthreshold;
-  flannFindPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs);
-  //_findPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs );
+  //flannFindPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs);
+  _findPairs(objectKeypoints, objectDescriptors, imageKeypoints, imageDescriptors, ptpairs );
 
   kp1 = objectKeypoints->total;
   kp2 = imageKeypoints->total;
@@ -237,15 +237,17 @@ int imgproc::locatePlanarObject(
   n = (int)(ptpairs.size()/2);
   simlarity = n * 100 / kpthreshold;
 
-  if( n < 4 )
-  return 0;
+  // if simlarity is not more than threshold, return false
+  if( n < 4 || simlarity < 20) {
+    return 0;
+  }
 
   pt1.resize(n);
   pt2.resize(n);
 
   for (i = 0; i < n; i++) {
-  pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
-  pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
+    pt1[i] = ((CvSURFPoint*)cvGetSeqElem(objectKeypoints,ptpairs[i*2]))->pt;
+    pt2[i] = ((CvSURFPoint*)cvGetSeqElem(imageKeypoints,ptpairs[i*2+1]))->pt;
   }
   
   _pt1 = cvMat(1, n, CV_32FC2, &pt1[0]);
@@ -259,9 +261,12 @@ int imgproc::locatePlanarObject(
     double Z = 1./(h[6] * x + h[7] * y + h[8]);
     double X = (h[0] * x + h[1] * y + h[2]) * Z;
     double Y = (h[3] * x + h[4] * y + h[5]) * Z;
+    if(x < 0 || Z < 0 || X < 0 || Y < 0) {
+      return 0;
+    }
     dst_corners[i] = cvPoint(cvRound(X), cvRound(Y));
   }
-  
+  // if the homography result is not valid, return false
   return 1;
 }
 
@@ -330,7 +335,6 @@ try {
     obj->Set(Nan::New("simularity").ToLocalChecked(), Nan::New<Number>(simularity));
   } else {
     obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(false));
-    obj->Set(Nan::New("simularity").ToLocalChecked(), Nan::New<Number>(simularity));
   }
   argv[1] = obj;
 
