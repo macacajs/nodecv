@@ -217,9 +217,11 @@ int imgproc::locatePlanarObject(
                                 const CvSeq* imageKeypoints,
                                 const CvSeq* imageDescriptors,
                                 const CvPoint src_corners[4],
-                                CvPoint dst_corners[4]) {
+                                CvPoint dst_corners[4],
+                                int& simlarity) {
   double h[9];
   CvMat _h = cvMat(3, 3, CV_64F, h);
+  simlarity = 0;
   vector<int> ptpairs;
   vector<CvPoint2D32f> pt1, pt2;
   CvMat _pt1, _pt2;
@@ -230,12 +232,10 @@ int imgproc::locatePlanarObject(
 
   kp1 = objectKeypoints->total;
   kp2 = imageKeypoints->total;
-  kpthreshold = kp1 < kp2 ? kp1 / 4 : kp2 / 4;
-  if ((int)(ptpairs.size()) < kpthreshold) {
-  return 0;
-  }
+  kpthreshold = kp1 < kp2 ? kp1 : kp2;
 
   n = (int)(ptpairs.size()/2);
+  simlarity = n * 100 / kpthreshold;
 
   if( n < 4 )
   return 0;
@@ -316,9 +316,10 @@ try {
 
   CvPoint src_corners[4] = {{0,0}, {object->width,0}, {object->width, object->height}, {0, object->height}};
   CvPoint dst_corners[4];
-
+  int simularity;
+  
   if (locatePlanarObject(objectKeypoints, objectDescriptors, imageKeypoints,
-                         imageDescriptors, src_corners, dst_corners )) {
+                         imageDescriptors, src_corners, dst_corners, simularity)) {
     obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(true));
     obj->Set(Nan::New("width").ToLocalChecked(), Nan::New<Number>(image->width));
     obj->Set(Nan::New("height").ToLocalChecked(), Nan::New<Number>(image->height));
@@ -326,8 +327,10 @@ try {
     obj->Set(Nan::New("match_y1").ToLocalChecked(), Nan::New<Number>(dst_corners[0].y));
     obj->Set(Nan::New("match_x2").ToLocalChecked(), Nan::New<Number>(dst_corners[2].x));
     obj->Set(Nan::New("match_y2").ToLocalChecked(), Nan::New<Number>(dst_corners[2].y));
+    obj->Set(Nan::New("simularity").ToLocalChecked(), Nan::New<Number>(simularity));
   } else {
     obj->Set(Nan::New("result").ToLocalChecked(), Nan::New<Boolean>(false));
+    obj->Set(Nan::New("simularity").ToLocalChecked(), Nan::New<Number>(simularity));
   }
   argv[1] = obj;
 

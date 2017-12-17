@@ -43,6 +43,7 @@ class imgproc : public Nan::ObjectWrap {
                                 const CvSeq* imageKeypoints,
                                 const CvSeq* imageDescriptors,
                                 const CvPoint src_corners[4],
-                                CvPoint dst_corners[4]);
+                                CvPoint dst_corners[4],
+                                int& simularity);
 };
 #endif
