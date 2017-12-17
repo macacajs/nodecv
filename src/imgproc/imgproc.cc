@@ -238,7 +238,7 @@ int imgproc::locatePlanarObject(
   simlarity = n * 100 / kpthreshold;
 
   // if simlarity is not more than threshold, return false
-  if( n < 4 || simlarity < 20) {
+  if( n < 4 || simlarity < 10) {
     return 0;
   }
 
