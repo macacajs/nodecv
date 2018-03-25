@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "co-mocha": "*",
+    "git-contributor": "^1.0.3",
     "istanbul": "^0.4.5",
     "jshint": "*",
     "mocha": "*",
@@ -30,7 +31,8 @@
   "scripts": {
     "build": "node-gyp rebuild",
     "test": "make test",
-    "jshint": "make jshint"
+    "jshint": "make jshint",
+    "contributor": "git-contributor"
   },
   "pre-commit": [
     "jshint"

@@ -1,6 +1,4 @@
 .git
-coverage.html
-lib-cov/
 node_modules
 .travis.yml
 .jshintrc
