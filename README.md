@@ -88,7 +88,7 @@ $ make test
 | :---: | :---: |
 
 
-This project follows the git-contributor [spec](https://github.com/xudafeng/git-contributor.git), auto upated at `Sun Mar 25 2018 16:07:06 GMT+0800`.
+This project follows the git-contributor [spec](https://github.com/xudafeng/git-contributor), auto upated at `Fri May 04 2018 20:07:33 GMT+0800`.
 
 <!-- GITCONTRIBUTOR_END -->
 

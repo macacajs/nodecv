@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "co-mocha": "*",
-    "git-contributor": "^1.0.3",
+    "git-contributor": "^1.0.8",
     "istanbul": "^0.4.5",
     "jshint": "*",
     "mocha": "*",
